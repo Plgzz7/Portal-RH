@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal RH EmpireAds | Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="2.png" type="image/png">
+<link rel="stylesheet" href="login.css">
+</head>
+<body>
+  <div class="splash-screen" id="splashScreen">
+    <img src="logo-final-branco.webp" alt="EmpireAds" class="splash-logo">
+  </div>
+
+  <section class="login-screen" id="loginScreen">
+    <div class="login-decoration login-decoration-top"></div>
+    <div class="login-decoration login-decoration-bottom"></div>
+    <div class="login-card">
+      <div class="login-logo-panel">
+        <img src="logo-final-branco.webp" alt="EmpireAds" class="login-logo">
+      </div>
+      <span class="login-kicker">ACESSO RESTRITO</span>
+      <h1>Bem-vindo ao seu portal</h1>
+      <p class="login-description">Entre para acessar os recursos da EmpireAds.</p>
+      <form id="loginForm" class="login-form">
+        <label for="loginEmail">E-mail</label>
+        <input id="loginEmail" type="email" placeholder="seu@email.com" autocomplete="username" required>
+        <label for="loginPassword">Senha</label>
+        <input id="loginPassword" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+        <p class="login-error" id="loginError" role="alert"></p>
+        <button type="submit" class="login-submit">ENTRAR NO SISTEMA <span>→</span></button>
+      </form>
+      <span class="login-footer">EmpireAds · Gestão de tráfego</span>
+    </div>
+  </section>
+
+  <script src="js/data.js"></script>
+  <script>
+    // Usuário já logado vai direto para a home
+    if (localStorage.getItem("empireads-user-name")) {
+      window.location.replace("home.html");
+    }
+
+    // Esconde a splash screen após o carregamento
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("splashScreen").classList.add("is-hidden");
+      }, 900);
+    });
+
+    // Login: valida credenciais contra a lista de usuários cadastrados (js/data.js)
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
+
+    loginForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+      if (!email || !password) {
+        loginError.textContent = "Preencha seu e-mail e sua senha.";
+        return;
+      }
+      const usuario = USUARIOS.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase() && u.senha === password
+      );
+      if (!usuario) {
+        loginError.textContent = "E-mail ou senha incorretos. Tente novamente.";
+        return;
+      }
+      loginError.textContent = "";
+      localStorage.setItem("empireads-user-name", usuario.nome);
+      localStorage.setItem("empireads-user-email", usuario.email);
+      localStorage.setItem("empireads-user-admin", usuario.admin ? "true" : "false");
+      window.location.href = "home.html";
+    });
+  </script>
+</body>
+</html>

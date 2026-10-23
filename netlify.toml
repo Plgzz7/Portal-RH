@@ -1,0 +1,13 @@
+[build]
+  # Não precisa de build, é site estático
+  publish = "."
+
+[[redirects]]
+  # Redireciona todas as rotas para index.html (SPA)
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  # As variáveis de ambiente são configuradas no painel do Netlify
+  # SUPABASE_URL e SUPABASE_ANON_KEY

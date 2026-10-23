@@ -1,0 +1,17 @@
+# ===== ARQUIVOS IGNORADOS PELO GIT =====
+
+# Dependências (se usar npm futuramente)
+node_modules/
+package-lock.json
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Ambiente local
+.env
+.env.local
+.env.*.local

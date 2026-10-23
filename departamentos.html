@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamentos - Portal EmpireAds</title>
+    <link rel="icon" type="image/png" href="2.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/supabase.js"></script>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="logo-final-branco.webp" alt="EmpireAds">
+        </div>
+        <nav>
+            <a class="nav-item" href="home.html">
+                <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Início
+            </a>
+            <a class="nav-item" href="ponto.html">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Relógio de Ponto
+            </a>
+            <a class="nav-item" href="pessoas.html">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Pessoas
+            </a>
+            <a class="nav-item active" href="departamentos.html">
+                <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+                Departamentos
+            </a>
+            <a class="nav-item" href="cultura.html">
+                <svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                Cultura
+            </a>
+            <!-- ABA ADMIN - SÓ APARECE PARA ADMINISTRADOR -->
+            <a class="nav-item" href="admin.html" id="nav-admin" style="display: none;">
+                <svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Administração
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a class="nav-item" href="index.html" title="Sair">
+                <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                Sair
+            </a>
+        </div>
+    </aside>
+
+    <!-- ============ TOPBAR ============ -->
+    <header class="topbar">
+        <img src="logo-empireads.png" alt="EmpireAds" class="topbar-logo">
+        <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" placeholder="Busque pessoas, páginas e documentos">
+        </div>
+        <div class="topbar-actions">
+            <button class="avatar-btn">
+                <span class="avatar" id="topbar-avatar">A</span>
+                <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ============ CONTENT ============ -->
+    <main class="content">
+        <div class="content-inner">
+
+            <div class="greeting">
+                <h1>Departamentos</h1>
+                <p>Estrutura organizacional e funções de cada área da EmpireAds</p>
+            </div>
+
+            <!-- GRID DE DEPARTAMENTOS -->
+            <div class="dept-grid" id="dept-grid"></div>
+
+        </div>
+    </main>
+
+    <script src="js/data.js"></script>
+    <script src="js/departamentos.js"></script>
+    <script>
+        // Mostra aba admin se for administrador (depois que tudo carregou)
+        setTimeout(() => {
+            if (typeof isAdmin === 'function' && isAdmin()) {
+                const navAdmin = document.getElementById('nav-admin');
+                if (navAdmin) navAdmin.style.display = 'flex';
+            }
+        }, 100);
+    </script>
+</body>
+</html>

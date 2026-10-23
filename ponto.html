@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relógio de Ponto - Portal EmpireAds</title>
+    <link rel="icon" type="image/png" href="2.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/ponto-service.js"></script>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="logo-final-branco.webp" alt="EmpireAds">
+        </div>
+        <nav>
+            <a class="nav-item" href="home.html">
+                <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Início
+            </a>
+            <a class="nav-item active">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Relógio de Ponto
+            </a>
+            <a class="nav-item" href="pessoas.html">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Pessoas
+            </a>
+            <a class="nav-item" href="departamentos.html">
+                <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+                Departamentos
+            </a>
+            <a class="nav-item" href="cultura.html">
+                <svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                Cultura
+            </a>
+            <!-- ABA ADMIN - SÓ APARECE PARA ADMINISTRADOR -->
+            <a class="nav-item" href="admin.html" id="nav-admin" style="display: none;">
+                <svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Administração
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a class="nav-item" href="index.html" title="Sair">
+                <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                Sair
+            </a>
+        </div>
+    </aside>
+
+    <!-- ============ TOPBAR ============ -->
+    <header class="topbar">
+        <img src="logo-empireads.png" alt="EmpireAds" class="topbar-logo">
+        <div class="search-box">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" placeholder="Busque pessoas, páginas e documentos">
+        </div>
+        <div class="topbar-actions">
+            <button class="avatar-btn">
+                <span class="avatar">A</span>
+                <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ============ CONTENT ============ -->
+    <main class="content">
+        <div class="content-inner">
+
+            <div class="greeting">
+                <h1>Relógio de Ponto</h1>
+                <p>Registre sua entrada e saída do expediente</p>
+            </div>
+
+            <div class="ponto-page-grid">
+                <!-- REGISTRO DE PONTO -->
+                <section class="card ponto-main-card">
+                    <div class="card-header">
+                        <h3>Registrar Ponto</h3>
+                        <span class="ponto-date" id="ponto-date"></span>
+                    </div>
+                    <div class="ponto-clock" id="ponto-clock">--:--:--</div>
+                    <div class="ponto-status" id="ponto-status">
+                        <span class="ponto-status-dot"></span>
+                        <span id="ponto-status-text">Fora do expediente</span>
+                    </div>
+                    <div class="ponto-actions">
+                        <button class="btn-ponto btn-entrada" id="btn-entrada" onclick="registrarPonto('entrada')">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Registrar Entrada
+                        </button>
+                        <button class="btn-ponto btn-saida" id="btn-saida" onclick="registrarPonto('saida')" disabled>
+                            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            Registrar Saída
+                        </button>
+                    </div>
+                    <div class="ponto-obs-field">
+                        <label for="ponto-obs">Observação (opcional)</label>
+                        <input type="text" id="ponto-obs" placeholder="Ex: Home office, Plantão...">
+                    </div>
+                </section>
+
+                <!-- RESUMO DO DIA -->
+                <section class="card">
+                    <div class="card-header">
+                        <h3>Resumo do Dia</h3>
+                    </div>
+                    <div class="ponto-summary ponto-summary-full" id="ponto-summary">
+                        <div class="ponto-summary-item">
+                            <span class="ponto-label">Entrada</span>
+                            <span class="ponto-value" id="ponto-entrada">--:--</span>
+                        </div>
+                        <div class="ponto-summary-item">
+                            <span class="ponto-label">Saída</span>
+                            <span class="ponto-value" id="ponto-saida">--:--</span>
+                        </div>
+                        <div class="ponto-summary-item">
+                            <span class="ponto-label">Atraso</span>
+                            <span class="ponto-value" id="ponto-atraso">--:--</span>
+                        </div>
+                        <div class="ponto-summary-item">
+                            <span class="ponto-label">Trabalhadas</span>
+                            <span class="ponto-value" id="ponto-horas">--:--</span>
+                        </div>
+                        <div class="ponto-summary-item">
+                            <span class="ponto-label">Saldo</span>
+                            <span class="ponto-value" id="ponto-saldo">--:--</span>
+                        </div>
+                        <div class="ponto-summary-item">
+                            <span class="ponto-label">Horas Extras</span>
+                            <span class="ponto-value" id="ponto-extras">--:--</span>
+                        </div>
+                        <div class="ponto-summary-item ponto-summary-wide">
+                            <span class="ponto-label">Status</span>
+                            <span class="ponto-value" id="ponto-status-resumo">⚪ Aguardando</span>
+                        </div>
+                        <div class="ponto-summary-item ponto-summary-wide">
+                            <span class="ponto-label">Tipo</span>
+                            <span class="ponto-value" id="ponto-tipo">Dia normal</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- INFO DO FUNCIONÁRIO -->
+            <section class="card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <h3>Minha Jornada</h3>
+                </div>
+                <div class="ponto-jornada">
+                    <div class="ponto-jornada-item">
+                        <span class="ponto-label">Funcionário</span>
+                        <span class="ponto-value" id="jornada-funcionario"></span>
+                    </div>
+                    <div class="ponto-jornada-item">
+                        <span class="ponto-label">Entrada prevista</span>
+                        <span class="ponto-value">09:00</span>
+                    </div>
+                    <div class="ponto-jornada-item">
+                        <span class="ponto-label">Saída prevista</span>
+                        <span class="ponto-value">18:00</span>
+                    </div>
+                    <div class="ponto-jornada-item">
+                        <span class="ponto-label">Jornada</span>
+                        <span class="ponto-value">08:00</span>
+                    </div>
+                    <div class="ponto-jornada-item">
+                        <span class="ponto-label">Almoço</span>
+                        <span class="ponto-value">01:00</span>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // ===== RELÓGIO DE PONTO =====
+        const CONFIG = {
+            funcionario: localStorage.getItem('empireads-user-name') || 'Visitante',
+            entradaEsperada: '09:00',
+            saidaEsperada: '18:00',
+            jornada: '08:00',
+            almoco: '01:00'
+        };
+
+        // Exibe o nome do usuário logado na jornada e a inicial no avatar
+        document.getElementById('jornada-funcionario').textContent = CONFIG.funcionario;
+        const avatarEl = document.querySelector('.topbar-actions .avatar');
+        if (avatarEl) avatarEl.textContent = CONFIG.funcionario.trim()[0].toUpperCase();
+
+        let pontoHoje = {
+            entrada: null,
+            saida: null,
+            observacao: ''
+        };
+
+        function pad(n) { return n.toString().padStart(2, '0'); }
+
+        function timeToMinutes(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function minutesToTime(mins) {
+            const h = Math.floor(Math.abs(mins) / 60);
+            const m = Math.abs(mins) % 60;
+            return pad(h) + ':' + pad(m);
+        }
+
+        function atualizarRelogio() {
+            const now = new Date();
+            const clockEl = document.getElementById('ponto-clock');
+            if (clockEl) clockEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+
+            const dateEl = document.getElementById('ponto-date');
+            if (dateEl) {
+                const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+                const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+                dateEl.textContent = dias[now.getDay()] + ', ' + now.getDate() + ' de ' + meses[now.getMonth()] + ' de ' + now.getFullYear();
+            }
+        }
+        setInterval(atualizarRelogio, 1000);
+        atualizarRelogio();
+
+        function isPlantao(date, obs) {
+            if (date.getDay() === 6) return true;
+            return /plant[aã]o/i.test(obs || '');
+        }
+
+        async function registrarPonto(tipo) {
+            const now = new Date();
+            const horaAtual = pad(now.getHours()) + ':' + pad(now.getMinutes());
+            const obsInput = document.getElementById('ponto-obs');
+            const obs = obsInput ? obsInput.value.trim() : '';
+
+            if (tipo === 'entrada' && !pontoHoje.entrada) {
+                // Salva no Supabase
+                const resultado = await PontoService.salvarRegistro({ tipo: 'entrada', observacao: obs });
+                if (!resultado.success) {
+                    alert('Erro ao salvar ponto. Tente novamente.');
+                    console.error(resultado.error);
+                    return;
+                }
+                pontoHoje.entrada = horaAtual;
+                pontoHoje.observacao = obs;
+                document.getElementById('btn-entrada').disabled = true;
+                document.getElementById('btn-saida').disabled = false;
+                atualizarStatus('entrada');
+                mostrarResumo();
+            } else if (tipo === 'saida' && pontoHoje.entrada && !pontoHoje.saida) {
+                // Salva no Supabase
+                const resultado = await PontoService.salvarRegistro({ tipo: 'saida', observacao: obs });
+                if (!resultado.success) {
+                    alert('Erro ao salvar ponto. Tente novamente.');
+                    console.error(resultado.error);
+                    return;
+                }
+                pontoHoje.saida = horaAtual;
+                if (obs) pontoHoje.observacao = pontoHoje.observacao ? pontoHoje.observacao + ' | ' + obs : obs;
+                document.getElementById('btn-saida').disabled = true;
+                if (obsInput) obsInput.disabled = true;
+                atualizarStatus('finalizado');
+                mostrarResumo();
+            }
+        }
+
+        // Carrega ponto do dia ao abrir a página
+        (async function carregarPontoHoje() {
+            const { data, error } = await PontoService.getPontoHoje();
+            if (data && !error) {
+                if (data.hora_entrada) {
+                    pontoHoje.entrada = data.hora_entrada.substring(0, 5);
+                    document.getElementById('btn-entrada').disabled = true;
+                    document.getElementById('btn-saida').disabled = false;
+                    atualizarStatus('entrada');
+                }
+                if (data.hora_saida) {
+                    pontoHoje.saida = data.hora_saida.substring(0, 5);
+                    document.getElementById('btn-saida').disabled = true;
+                    document.getElementById('ponto-obs').disabled = true;
+                    atualizarStatus('finalizado');
+                }
+                if (data.observacao) {
+                    pontoHoje.observacao = data.observacao;
+                    document.getElementById('ponto-obs').value = data.observacao;
+                }
+                mostrarResumo();
+            }
+        })();
+
+        function atualizarStatus(status) {
+            const el = document.getElementById('ponto-status-text');
+            const statusEl = document.getElementById('ponto-status');
+            if (!el || !statusEl) return;
+            statusEl.classList.remove('status-andamento', 'status-finalizado');
+            if (status === 'entrada') {
+                el.textContent = 'Em andamento';
+                statusEl.classList.add('status-andamento');
+            } else if (status === 'finalizado') {
+                el.textContent = 'Finalizado';
+                statusEl.classList.add('status-finalizado');
+            } else {
+                el.textContent = 'Fora do expediente';
+            }
+        }
+
+        function mostrarResumo() {
+            const entrada = pontoHoje.entrada;
+            const saida = pontoHoje.saida;
+            const plantao = isPlantao(new Date(), pontoHoje.observacao);
+
+            document.getElementById('ponto-entrada').textContent = entrada || '--:--';
+            document.getElementById('ponto-saida').textContent = saida || '--:--';
+            document.getElementById('ponto-tipo').textContent = plantao ? '🔶 Plantão' : 'Dia normal';
+
+            let atraso = '--:--';
+            let horasTrabalhadas = '--:--';
+            let saldo = '--:--';
+            let extras = '--:--';
+            let saldoClass = '';
+            let statusResumo = '⚪ Aguardando';
+
+            if (entrada) {
+                // Atraso
+                const atrasoMin = timeToMinutes(entrada) - timeToMinutes(CONFIG.entradaEsperada);
+                atraso = atrasoMin > 0 ? minutesToTime(atrasoMin) : '00:00';
+                statusResumo = '🟡 Em andamento';
+            }
+
+            if (entrada && saida) {
+                let diff = timeToMinutes(saida) - timeToMinutes(entrada);
+                if (!plantao && diff > 360) diff -= 60; // desconta almoço se > 6h
+                horasTrabalhadas = minutesToTime(diff);
+                statusResumo = '✅ Finalizado';
+
+                if (!plantao) {
+                    const jornadaMin = timeToMinutes(CONFIG.jornada);
+                    const saldoMin = diff - jornadaMin;
+                    saldo = (saldoMin >= 0 ? '🟢 +' : '🔴 -') + minutesToTime(Math.abs(saldoMin));
+                    saldoClass = saldoMin > 0 ? 'positivo' : saldoMin < 0 ? 'negativo' : 'neutro';
+                    extras = saldoMin > 0 ? minutesToTime(saldoMin) : '00:00';
+                } else {
+                    saldo = '⚪ 00:00';
+                    saldoClass = 'neutro';
+                    extras = horasTrabalhadas;
+                }
+            }
+
+            const atrasoEl = document.getElementById('ponto-atraso');
+            const horasEl = document.getElementById('ponto-horas');
+            const saldoEl = document.getElementById('ponto-saldo');
+            const extrasEl = document.getElementById('ponto-extras');
+            const statusResumoEl = document.getElementById('ponto-status-resumo');
+
+            if (atrasoEl) atrasoEl.textContent = atraso;
+            if (horasEl) horasEl.textContent = horasTrabalhadas;
+            if (saldoEl) {
+                saldoEl.textContent = saldo;
+                saldoEl.className = 'ponto-value ' + saldoClass;
+            }
+            if (extrasEl) extrasEl.textContent = extras;
+            if (statusResumoEl) statusResumoEl.textContent = statusResumo;
+        }
+
+        // Mostra aba admin se for administrador (depois que tudo carregou)
+        setTimeout(() => {
+            if (typeof isAdmin === 'function' && isAdmin()) {
+                const navAdmin = document.getElementById('nav-admin');
+                if (navAdmin) navAdmin.style.display = 'flex';
+            }
+        }, 100);
+    </script>
+</body>
+</html>
