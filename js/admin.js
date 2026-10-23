@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Atualiza avatar com inicial do usuário
 function atualizarAvatar() {
-    const usuario = getUsuarioLogado();
+    const usuario = _getUsuarioLogado ? _getUsuarioLogado() : { nome: localStorage.getItem('empireads-user-name') || '' };
     const avatarEl = document.querySelector('.topbar-actions .avatar');
     if (avatarEl && usuario.nome) {
         avatarEl.textContent = usuario.nome.trim()[0].toUpperCase();
