@@ -129,7 +129,7 @@ a {
     border-bottom: 1px solid var(--border-soft);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 0 32px;
     z-index: 40;
 }
@@ -174,6 +174,96 @@ a {
 .search-box input:focus {
     border-color: var(--yellow-border);
     box-shadow: 0 0 0 3px rgba(243, 171, 5, 0.12);
+}
+
+/* ============ SEARCH DROPDOWN ============ */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    display: none;
+    z-index: 100;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.search-dropdown.visible {
+    display: block;
+}
+
+.search-section {
+    margin-bottom: 6px;
+}
+
+.search-section:last-child {
+    margin-bottom: 0;
+}
+
+.search-section-title {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 6px 10px 8px;
+}
+
+.search-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.search-item:hover,
+.search-item.highlighted {
+    background: var(--yellow-soft);
+    color: var(--yellow-bright);
+}
+
+.search-item svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: var(--text-dim);
+    position: static;
+    transform: none;
+}
+
+.search-item:hover svg,
+.search-item.highlighted svg {
+    color: var(--yellow-bright);
+}
+
+.search-item .search-item-sub {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    display: block;
+    font-weight: 400;
+}
+
+.search-empty {
+    padding: 20px 10px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.search-item-hidden {
+    display: none;
 }
 
 .topbar-actions {
