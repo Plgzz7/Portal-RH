@@ -324,6 +324,8 @@
                 pontoHoje.observacao = obs;
                 document.getElementById('btn-entrada').disabled = true;
                 document.getElementById('btn-saida').disabled = false;
+                // Desabilita observação após registrar entrada (só pode 1x)
+                if (obsInput) obsInput.disabled = true;
                 atualizarStatus('entrada');
                 mostrarResumo();
                 // Salva no banco em segundo plano
@@ -331,16 +333,13 @@
                     if (!r.success) console.error('Erro ao salvar entrada:', r.error);
                 });
             } else if (tipo === 'saida' && pontoHoje.entrada && !pontoHoje.saida) {
-                const obsFinal = pontoHoje.observacao ? (obs ? pontoHoje.observacao + ' | ' + obs : pontoHoje.observacao) : obs;
                 // Atualiza a interface imediatamente
                 pontoHoje.saida = horaAtual;
-                pontoHoje.observacao = obsFinal;
                 document.getElementById('btn-saida').disabled = true;
-                if (obsInput) obsInput.disabled = true;
                 atualizarStatus('finalizado');
                 mostrarResumo();
                 // Salva no banco em segundo plano
-                salvarNoBanco('saida', obsFinal).then(r => {
+                salvarNoBanco('saida', pontoHoje.observacao).then(r => {
                     if (!r.success) console.error('Erro ao salvar saída:', r.error);
                 });
             }

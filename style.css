@@ -1,17 +1,18 @@
 :root {
-    --bg: #111214;
-    --bg-deep: #0d0e10;
-    --surface: #171719;
-    --surface-2: #1d1e21;
-    --surface-3: #242528;
-    --border: #242528;
-    --border-soft: #1e1f22;
-    --text: #f3f3f4;
-    --text-muted: #9a9ba1;
-    --text-dim: #6e6f75;
+    /* Tema claro: fundo branco, sidebar preta */
+    --bg: #f5f5f7;
+    --bg-deep: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #f0f0f2;
+    --surface-3: #e4e4e7;
+    --border: #e0e0e3;
+    --border-soft: #ebebef;
+    --text: #1a1a1c;
+    --text-muted: #5a5b60;
+    --text-dim: #8a8b91;
     --yellow: #f3ab05;
     --yellow-strong: #d18f00;
-    --yellow-bright: #ffc62e;
+    --yellow-bright: #d18f00;
     --yellow-soft: rgba(243, 171, 5, 0.13);
     --yellow-softer: rgba(243, 171, 5, 0.07);
     --yellow-border: rgba(243, 171, 5, 0.28);
@@ -51,8 +52,8 @@ a {
     left: 0;
     bottom: 0;
     width: 250px;
-    background: var(--bg-deep);
-    border-right: 1px solid var(--border-soft);
+    background: #111214;
+    border-right: 1px solid #242528;
     display: flex;
     flex-direction: column;
     z-index: 50;
@@ -60,7 +61,7 @@ a {
 
 .sidebar-logo {
     padding: 20px 24px;
-    border-bottom: 1px solid var(--border-soft);
+    border-bottom: 1px solid #242528;
 }
 
 .sidebar-logo img {
@@ -84,7 +85,7 @@ a {
     border-radius: 10px;
     font-size: 14.5px;
     font-weight: 500;
-    color: var(--text-muted);
+    color: #9a9ba1;
     margin-bottom: 2px;
     transition: background 0.15s, color 0.15s;
     cursor: pointer;
@@ -97,8 +98,8 @@ a {
 }
 
 .nav-item:hover {
-    background: var(--surface-2);
-    color: var(--text);
+    background: #1d1e21;
+    color: #f3f3f4;
 }
 
 .nav-item.active {
@@ -108,7 +109,7 @@ a {
 
 .sidebar-footer {
     padding: 14px;
-    border-top: 1px solid var(--border-soft);
+    border-top: 1px solid #242528;
 }
 
 .sidebar-footer .nav-item {
@@ -123,7 +124,7 @@ a {
     left: 250px;
     right: 0;
     height: 66px;
-    background: rgba(17, 18, 20, 0.85);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-soft);
     display: flex;
@@ -223,7 +224,7 @@ a {
     height: 36px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--yellow-strong), #8a5f00);
-    color: #241a02;
+    color: #ffffff;
     font-weight: 700;
     font-size: 14px;
     display: flex;
@@ -327,6 +328,7 @@ a {
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .card-header {
@@ -811,7 +813,7 @@ a {
 
 .btn-entrada {
     background: var(--yellow);
-    color: #241a02;
+    color: #ffffff;
 }
 
 .btn-entrada:not(:disabled):hover {
@@ -850,8 +852,9 @@ a {
     flex-direction: column;
     gap: 3px;
     padding: 10px 12px;
-    background: var(--surface-2);
+    background: #f8f8fa;
     border-radius: 10px;
+    border: 1px solid var(--border-soft);
 }
 
 .ponto-label {
@@ -961,8 +964,9 @@ a {
     flex-direction: column;
     gap: 3px;
     padding: 12px 14px;
-    background: var(--surface-2);
+    background: #f8f8fa;
     border-radius: 10px;
+    border: 1px solid var(--border-soft);
 }
 
 /* ============ CORES POR DEPARTAMENTO ============ */
