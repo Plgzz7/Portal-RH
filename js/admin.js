@@ -1,14 +1,13 @@
 // ===== PAINEL DE ADMINISTRAÇÃO =====
 // Lógica da página admin.html
 
+// Protege a página: só admin acessa (verifica localStorage direto)
+if (localStorage.getItem('empireads-user-admin') !== 'true') {
+    window.location.replace('home.html');
+}
+
 // Aguarda o DOM carregar para verificar admin
 document.addEventListener('DOMContentLoaded', async () => {
-    // Verifica se é admin, senão redireciona
-    if (typeof isAdmin === 'function' && !isAdmin()) {
-        window.location.replace('home.html');
-        return;
-    }
-
     // Mostra a aba admin no menu
     const navAdmin = document.getElementById('nav-admin');
     if (navAdmin) navAdmin.style.display = 'flex';

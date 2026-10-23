@@ -126,13 +126,11 @@
     <script src="js/data.js"></script>
     <script src="js/pessoas.js"></script>
     <script>
-        // Mostra aba admin se for administrador (depois que tudo carregou)
-        setTimeout(() => {
-            if (typeof isAdmin === 'function' && isAdmin()) {
-                const navAdmin = document.getElementById('nav-admin');
-                if (navAdmin) navAdmin.style.display = 'flex';
-            }
-        }, 100);
+        // Mostra aba admin se for administrador (verifica localStorage direto)
+        if (localStorage.getItem('empireads-user-admin') === 'true') {
+            const navAdmin = document.getElementById('nav-admin');
+            if (navAdmin) navAdmin.style.display = 'flex';
+        }
     </script>
 </body>
 </html>
