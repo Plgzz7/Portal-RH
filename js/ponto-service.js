@@ -24,6 +24,14 @@ function _formatarHoraSupabase(data) {
 
 const PontoService = {
     
+    // Cliente Supabase (usa global ou cria fallback)
+    _client() {
+        return window.supabaseClient || window.supabase.createClient(
+            'https://mrrufxybzbqzbfvemgcr.supabase.co',
+            'sb_publishable_IeqXRTlSLhD8Wx2i_To4bA_5Kgf--p_'
+        );
+    },
+    
     // Salva um novo registro de ponto
     async salvarRegistro(dados) {
         const usuario = _getUsuarioLogado();
@@ -39,7 +47,7 @@ const PontoService = {
         };
 
         // Se já existe registro hoje, atualiza; senão, cria novo
-        const { data: existente } = await supabase
+        const { data: existente } = await this._client()
             .from('registros_ponto')
             .select('id')
             .eq('usuario_email', usuario.email)
@@ -52,7 +60,7 @@ const PontoService = {
                 ? { hora_entrada: registro.hora_entrada, observacao: registro.observacao }
                 : { hora_saida: registro.hora_saida, observacao: registro.observacao };
                 
-            const { error } = await supabase
+            const { error } = await this._client()
                 .from('registros_ponto')
                 .update(updateData)
                 .eq('id', existente.id);
@@ -60,7 +68,7 @@ const PontoService = {
             return { success: !error, error };
         } else {
             // Cria novo registro
-            const { error } = await supabase
+            const { error } = await this._client()
                 .from('registros_ponto')
                 .insert([registro]);
                 
@@ -73,7 +81,7 @@ const PontoService = {
         const usuario = _getUsuarioLogado();
         const hoje = _formatarDataSupabase(new Date());
         
-        const { data, error } = await supabase
+        const { data, error } = await this._client()
             .from('registros_ponto')
             .select('*')
             .eq('usuario_email', usuario.email)
@@ -85,7 +93,7 @@ const PontoService = {
 
     // Busca todos os pontos de um usuário em um período
     async getPontosUsuario(email, dataInicio, dataFim) {
-        const { data, error } = await supabase
+        const { data, error } = await this._client()
             .from('registros_ponto')
             .select('*')
             .eq('usuario_email', email)
@@ -98,7 +106,7 @@ const PontoService = {
 
     // Busca pontos de todos os usuários em um período (admin)
     async getPontosTodos(dataInicio, dataFim) {
-        const { data, error } = await supabase
+        const { data, error } = await this._client()
             .from('registros_ponto')
             .select('*')
             .gte('data', dataInicio)
@@ -111,7 +119,7 @@ const PontoService = {
 
     // Lista todos os usuários únicos que já bateram ponto
     async getUsuariosComPonto() {
-        const { data, error } = await supabase
+        const { data, error } = await this._client()
             .from('registros_ponto')
             .select('usuario_email, usuario_nome')
             .order('usuario_nome');

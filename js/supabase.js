@@ -11,8 +11,11 @@ const SUPABASE_ANON_KEY = typeof CONFIG_SUPABASE !== 'undefined'
     ? CONFIG_SUPABASE.ANON_KEY 
     : 'sb_publishable_IeqXRTlSLhD8Wx2i_To4bA_5Kgf--p_';
 
-// Inicializa o cliente Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Inicializa o cliente Supabase (global para uso em outros arquivos)
+window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Alias para compatibilidade
+const supabase = window.supabaseClient;
 
 // Helper: pega o usuário logado do localStorage
 function getUsuarioLogado() {
