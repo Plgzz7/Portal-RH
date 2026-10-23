@@ -165,6 +165,20 @@
         </div>
     </div>
 
+    <script>
+        // ===== CLIENTE SUPABASE GLOBAL =====
+        window._sb = window.supabase.createClient(
+            'https://mrrufxybzbqzbfvemgcr.supabase.co',
+            'sb_publishable_IeqXRTlSLhD8Wx2i_To4bA_5Kgf--p_'
+        );
+        window._getUsuarioLogado = function() {
+            return {
+                nome: localStorage.getItem('empireads-user-name'),
+                email: localStorage.getItem('empireads-user-email'),
+                admin: localStorage.getItem('empireads-user-admin') === 'true'
+            };
+        };
+    </script>
     <script src="js/ponto-service.js"></script>
     <script src="js/export.js"></script>
     <script src="js/admin.js"></script>

@@ -26,7 +26,9 @@ const PontoService = {
     
     // Cliente Supabase (usa global ou cria fallback)
     _client() {
-        return window.supabaseClient || window.supabase.createClient(
+        if (window._sb) return window._sb;
+        if (window.supabaseClient) return window.supabaseClient;
+        return window.supabase.createClient(
             'https://mrrufxybzbqzbfvemgcr.supabase.co',
             'sb_publishable_IeqXRTlSLhD8Wx2i_To4bA_5Kgf--p_'
         );
