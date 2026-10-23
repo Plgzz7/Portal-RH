@@ -12,9 +12,7 @@
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/auth.js?v=2"></script>
-    <script src="js/supabase.js?v=2"></script>
-    <script src="js/ponto-service.js?v=2"></script>
+    <script src="js/auth.js"></script>
 
     <!-- ============ SIDEBAR ============ -->
     <aside class="sidebar">
@@ -183,9 +181,81 @@
     </main>
 
     <script>
-        // ===== RELÓGIO DE PONTO =====
+        // ===== RELÓGIO DE PONTO (autossuficiente) =====
+        // Cliente Supabase criado diretamente aqui para não depender de arquivos externos
+        const _sb = window.supabase.createClient(
+            'https://mrrufxybzbqzbfvemgcr.supabase.co',
+            'sb_publishable_IeqXRTlSLhD8Wx2i_To4bA_5Kgf--p_'
+        );
+
+        const _userNome = localStorage.getItem('empireads-user-name') || 'Visitante';
+        const _userEmail = localStorage.getItem('empireads-user-email') || '';
+        const _userAdmin = localStorage.getItem('empireads-user-admin') === 'true';
+
+        function _hojeISO() {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function _horaSQL(d) {
+            return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
+        }
+
+        // Salva entrada ou saída no banco
+        async function salvarNoBanco(tipo, observacao) {
+            const agora = new Date();
+            const hoje = _hojeISO();
+            try {
+                // Verifica se já existe registro hoje
+                const { data: existente } = await _sb
+                    .from('registros_ponto')
+                    .select('id')
+                    .eq('usuario_email', _userEmail)
+                    .eq('data', hoje)
+                    .maybeSingle();
+
+                if (existente) {
+                    // Atualiza
+                    const update = tipo === 'entrada'
+                        ? { hora_entrada: _horaSQL(agora), observacao: observacao || null }
+                        : { hora_saida: _horaSQL(agora), observacao: observacao || null };
+                    const { error } = await _sb.from('registros_ponto').update(update).eq('id', existente.id);
+                    return { success: !error, error };
+                } else {
+                    // Cria novo
+                    const novo = {
+                        usuario_email: _userEmail,
+                        usuario_nome: _userNome,
+                        data: hoje,
+                        hora_entrada: tipo === 'entrada' ? _horaSQL(agora) : null,
+                        hora_saida: tipo === 'saida' ? _horaSQL(agora) : null,
+                        observacao: observacao || null
+                    };
+                    const { error } = await _sb.from('registros_ponto').insert([novo]);
+                    return { success: !error, error };
+                }
+            } catch (e) {
+                return { success: false, error: e };
+            }
+        }
+
+        // Busca o ponto de hoje no banco
+        async function buscarPontoHoje() {
+            try {
+                const { data, error } = await _sb
+                    .from('registros_ponto')
+                    .select('*')
+                    .eq('usuario_email', _userEmail)
+                    .eq('data', _hojeISO())
+                    .maybeSingle();
+                return { data, error };
+            } catch (e) {
+                return { data: null, error: e };
+            }
+        }
+
         const CONFIG = {
-            funcionario: localStorage.getItem('empireads-user-name') || 'Visitante',
+            funcionario: _userNome,
             entradaEsperada: '09:00',
             saidaEsperada: '18:00',
             jornada: '08:00',
@@ -196,6 +266,12 @@
         document.getElementById('jornada-funcionario').textContent = CONFIG.funcionario;
         const avatarEl = document.querySelector('.topbar-actions .avatar');
         if (avatarEl) avatarEl.textContent = CONFIG.funcionario.trim()[0].toUpperCase();
+
+        // Mostra aba admin se for administrador
+        if (_userAdmin) {
+            const navAdmin = document.getElementById('nav-admin');
+            if (navAdmin) navAdmin.style.display = 'flex';
+        }
 
         let pontoHoje = {
             entrada: null,
@@ -243,39 +319,36 @@
             const obs = obsInput ? obsInput.value.trim() : '';
 
             if (tipo === 'entrada' && !pontoHoje.entrada) {
-                // Salva no Supabase
-                const resultado = await PontoService.salvarRegistro({ tipo: 'entrada', observacao: obs });
-                if (!resultado.success) {
-                    alert('Erro ao salvar ponto. Tente novamente.');
-                    console.error(resultado.error);
-                    return;
-                }
+                // Atualiza a interface imediatamente
                 pontoHoje.entrada = horaAtual;
                 pontoHoje.observacao = obs;
                 document.getElementById('btn-entrada').disabled = true;
                 document.getElementById('btn-saida').disabled = false;
                 atualizarStatus('entrada');
                 mostrarResumo();
+                // Salva no banco em segundo plano
+                salvarNoBanco('entrada', obs).then(r => {
+                    if (!r.success) console.error('Erro ao salvar entrada:', r.error);
+                });
             } else if (tipo === 'saida' && pontoHoje.entrada && !pontoHoje.saida) {
-                // Salva no Supabase
-                const resultado = await PontoService.salvarRegistro({ tipo: 'saida', observacao: obs });
-                if (!resultado.success) {
-                    alert('Erro ao salvar ponto. Tente novamente.');
-                    console.error(resultado.error);
-                    return;
-                }
+                const obsFinal = pontoHoje.observacao ? (obs ? pontoHoje.observacao + ' | ' + obs : pontoHoje.observacao) : obs;
+                // Atualiza a interface imediatamente
                 pontoHoje.saida = horaAtual;
-                if (obs) pontoHoje.observacao = pontoHoje.observacao ? pontoHoje.observacao + ' | ' + obs : obs;
+                pontoHoje.observacao = obsFinal;
                 document.getElementById('btn-saida').disabled = true;
                 if (obsInput) obsInput.disabled = true;
                 atualizarStatus('finalizado');
                 mostrarResumo();
+                // Salva no banco em segundo plano
+                salvarNoBanco('saida', obsFinal).then(r => {
+                    if (!r.success) console.error('Erro ao salvar saída:', r.error);
+                });
             }
         }
 
         // Carrega ponto do dia ao abrir a página
         (async function carregarPontoHoje() {
-            const { data, error } = await PontoService.getPontoHoje();
+            const { data, error } = await buscarPontoHoje();
             if (data && !error) {
                 if (data.hora_entrada) {
                     pontoHoje.entrada = data.hora_entrada.substring(0, 5);
@@ -370,14 +443,6 @@
             if (extrasEl) extrasEl.textContent = extras;
             if (statusResumoEl) statusResumoEl.textContent = statusResumo;
         }
-
-        // Mostra aba admin se for administrador (depois que tudo carregou)
-        setTimeout(() => {
-            if (typeof isAdmin === 'function' && isAdmin()) {
-                const navAdmin = document.getElementById('nav-admin');
-                if (navAdmin) navAdmin.style.display = 'flex';
-            }
-        }, 100);
     </script>
 </body>
 </html>
