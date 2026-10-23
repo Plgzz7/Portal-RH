@@ -69,8 +69,6 @@ a {
     max-width: 190px;
     height: auto;
     display: block;
-    /* Filtro para melhorar contraste da logo preta no fundo escuro */
-    filter: brightness(0) invert(1);
 }
 
 .sidebar nav {
