@@ -1542,15 +1542,12 @@ a {
     background-repeat: no-repeat;
 }
 
-/* Card Eventos - sem imagem de fundo, apenas card normal */
+/* Card Eventos com foto do troféu */
 .culture-photo-events {
-    background: var(--surface);
-    min-height: auto;
-}
-
-.culture-photo-events .culture-people-body {
-    position: static;
-    padding: 18px 20px 20px;
+    background-image: url("empire-ads-trofeu-01.png");
+    background-position: center 35%;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .culture-people-body h4 {
