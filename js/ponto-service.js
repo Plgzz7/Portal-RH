@@ -1,19 +1,39 @@
 // ===== SERVIÇO DE PONTO =====
 // Funções para salvar e buscar registros de ponto no Supabase
 
+// Helpers locais (fallback caso supabase.js não tenha carregado)
+function _getUsuarioLogado() {
+    if (typeof getUsuarioLogado === 'function') return getUsuarioLogado();
+    return {
+        nome: localStorage.getItem('empireads-user-name'),
+        email: localStorage.getItem('empireads-user-email'),
+        admin: localStorage.getItem('empireads-user-admin') === 'true'
+    };
+}
+
+function _formatarDataSupabase(data) {
+    if (typeof formatarDataSupabase === 'function') return formatarDataSupabase(data);
+    return data.toISOString().split('T')[0];
+}
+
+function _formatarHoraSupabase(data) {
+    if (typeof formatarHoraSupabase === 'function') return formatarHoraSupabase(data);
+    return data.toTimeString().split(' ')[0];
+}
+
 const PontoService = {
     
     // Salva um novo registro de ponto
     async salvarRegistro(dados) {
-        const usuario = getUsuarioLogado();
+        const usuario = _getUsuarioLogado();
         const agora = new Date();
         
         const registro = {
             usuario_email: usuario.email,
             usuario_nome: usuario.nome,
-            data: formatarDataSupabase(agora),
-            hora_entrada: dados.tipo === 'entrada' ? formatarHoraSupabase(agora) : null,
-            hora_saida: dados.tipo === 'saida' ? formatarHoraSupabase(agora) : null,
+            data: _formatarDataSupabase(agora),
+            hora_entrada: dados.tipo === 'entrada' ? _formatarHoraSupabase(agora) : null,
+            hora_saida: dados.tipo === 'saida' ? _formatarHoraSupabase(agora) : null,
             observacao: dados.observacao || null
         };
 
@@ -49,8 +69,8 @@ const PontoService = {
 
     // Busca o ponto do usuário logado hoje
     async getPontoHoje() {
-        const usuario = getUsuarioLogado();
-        const hoje = formatarDataSupabase(new Date());
+        const usuario = _getUsuarioLogado();
+        const hoje = _formatarDataSupabase(new Date());
         
         const { data, error } = await supabase
             .from('registros_ponto')
