@@ -1,5 +1,6 @@
 // ===== SERVIÇO DE PONTO =====
 // Funções para salvar e buscar registros de ponto no Supabase
+// Versão: 2.0
 
 // Helpers locais (fallback caso supabase.js não tenha carregado)
 function _getUsuarioLogado() {
